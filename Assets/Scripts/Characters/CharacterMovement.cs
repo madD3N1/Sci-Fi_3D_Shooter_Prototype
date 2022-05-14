@@ -42,6 +42,7 @@ namespace SciFiShooter
         public bool IsCrouch => isCrouch;
         public bool IsSprint => isSprint;
         public float DistanceToGround => distanceToGround;
+        public bool IsGrounded => distanceToGround < 0.005f;
 
         private float BaseCharacterHeight;
         private float BaseCharacterHeightOffset;
@@ -55,14 +56,10 @@ namespace SciFiShooter
             BaseCharacterHeightOffset = characterController.center.y;
         }
 
-        private void FixedUpdate()
-        {
-            UpdateDistanceToGround();
-        }
-
         private void Update()
         {
             Move();
+            UpdateDistanceToGround();
         }
 
         public float GetCurrentSpeedByState()
@@ -92,7 +89,7 @@ namespace SciFiShooter
         {
             DirectionControl = Vector3.MoveTowards(DirectionControl, TargetDirectionControl, Time.deltaTime * AccelerationRate);
 
-            if (characterController.isGrounded == true)
+            if (IsGrounded == true)
             {
                 MovementDirection = DirectionControl * GetCurrentSpeedByState();
                 
@@ -101,6 +98,8 @@ namespace SciFiShooter
                     MovementDirection.y = jumpSpeed;
                     isJump = false;
                 }
+
+                MovementDirection = transform.TransformDirection(MovementDirection);
             }
 
             MovementDirection += Physics.gravity * Time.deltaTime;
@@ -110,7 +109,7 @@ namespace SciFiShooter
 
         public void Jump()
         {
-            if(characterController.isGrounded == false) return;
+            if (IsGrounded == false) return;
 
             if (isCrouch == true) return;
 
@@ -121,7 +120,7 @@ namespace SciFiShooter
 
         public void Crouch()
         {
-            if (characterController.isGrounded == false) return;
+            if (IsGrounded == false) return;
 
             if (isSprint == true) return;
 
@@ -140,7 +139,7 @@ namespace SciFiShooter
 
         public void Sprint()
         {
-            if (characterController.isGrounded == false) return;
+            if (IsGrounded == false) return;
 
             if (isCrouch == true) return;
 

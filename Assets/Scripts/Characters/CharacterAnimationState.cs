@@ -10,9 +10,9 @@ namespace SciFiShooter
 
         [SerializeField] private Animator TargetAnimator;
 
-        private void Update()
+        private void LateUpdate()
         {
-            Vector3 movementSpeed = TargetCharacterController.velocity;
+            Vector3 movementSpeed = transform.InverseTransformDirection(TargetCharacterController.velocity);
 
             TargetAnimator.SetFloat("Normalize Movement X", movementSpeed.x / TargetCharacterMovement.GetCurrentSpeedByState());
             TargetAnimator.SetFloat("Normalize Movement Z", movementSpeed.z / TargetCharacterMovement.GetCurrentSpeedByState());
@@ -20,13 +20,12 @@ namespace SciFiShooter
             TargetAnimator.SetBool("Is Crouch", TargetCharacterMovement.IsCrouch);  
             TargetAnimator.SetBool("Is Sprint", TargetCharacterMovement.IsSprint);
             TargetAnimator.SetBool("Is Aiming", TargetCharacterMovement.IsAiming);
-            TargetAnimator.SetBool("Is Ground", TargetCharacterController.isGrounded);
+            TargetAnimator.SetBool("Is Ground", TargetCharacterMovement.IsGrounded);
 
-            if(TargetCharacterController.isGrounded == false)
+            if (TargetCharacterMovement.IsGrounded == false)
             {
                 TargetAnimator.SetFloat("Jump", movementSpeed.y);
             }
-
 
             Vector3 groundSpeed = TargetCharacterController.velocity;
             groundSpeed.y = 0;
