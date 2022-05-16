@@ -63,7 +63,8 @@ namespace SciFiShooter
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
                 TargetCharacterMovement.Sprint();
-                TargetCamera.SetTargetOffset(SpintOffset);
+                if(TargetCharacterMovement.IsAiming == false)
+                    TargetCamera.SetTargetOffset(SpintOffset);
             }
 
             if (Input.GetKeyUp(KeyCode.LeftShift))
